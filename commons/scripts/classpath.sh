@@ -1,7 +1,7 @@
 #!/bin/bash
 
 JQF_DIR=~/git/jqf
-PROJ_DIR=~/git/test-jqf-afl/test-commons
+PROJ_DIR=~/git/jqf-afl-targets/commons
 
 # Create classpath
 cp="$JQF_DIR/fuzz/target/classes:$JQF_DIR/fuzz/target/test-classes:$PROJ_DIR/target/classes"
