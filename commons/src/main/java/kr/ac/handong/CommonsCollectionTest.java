@@ -28,6 +28,8 @@
  */
 package kr.ac.handong;
 
+import com.pholser.junit.quickcheck.From;
+import edu.berkeley.cs.jqf.examples.common.AsciiStringGenerator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,7 +50,22 @@ import java.util.Arrays;
  * @author Rohan Padhye
  */
 @RunWith(JQF.class)
-public class PatriciaTrieTest {
+public class CommonsCollectionTest {
+
+    @Fuzz
+    public void testPrefixMap(HashMap<String, Integer> map, String prefix) {
+        assumeTrue(prefix.length() > 0);
+        // Create new trie with input `map`
+        PatriciaTrie trie = new PatriciaTrie(map);
+        // Get sub-map whose keys start with `prefix`
+        Map prefixMap = trie.prefixMap(prefix);
+        // Ensure that it contains all keys that start with `prefix`
+        for (String key : map.keySet()) {
+            if (key.startsWith(prefix)) {
+                assertTrue(prefixMap.containsKey(key));
+            }
+        }
+    }
 
     @Fuzz
     public void testCopy(Map<String, Integer> map, String key) {
@@ -78,7 +95,8 @@ public class PatriciaTrieTest {
                 }
 
                 input.read(buffer, 0, len) ;
-                map.put(new String(buffer), i);
+                keys[i] = new String(buffer) ;
+                map.put(keys[i], i);
                 Arrays.fill(buffer, (byte)0);
             }
 
@@ -88,5 +106,15 @@ public class PatriciaTrieTest {
         } catch (IOException e) {
             e.printStackTrace();
         }     
+    }
+
+    @Fuzz
+    public void testCopyAscii(Map<@From(AsciiStringGenerator.class) String, Integer> map,
+                              @From(AsciiStringGenerator.class) String key) {
+        assumeTrue(map.containsKey(key));
+        // Create new trie with input `map`
+        Trie trie = new PatriciaTrie(map);
+        // The key should exist in the trie as well
+        assertTrue(trie.containsKey(key));
     }
 }
