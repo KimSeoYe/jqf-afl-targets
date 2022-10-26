@@ -50,7 +50,7 @@ import java.util.Arrays;
  * @author Rohan Padhye
  */
 @RunWith(JQF.class)
-public class CommonsCollectionTest {
+public class PatriciaTrieTest {
 
     @Fuzz
     public void testPrefixMap(HashMap<String, Integer> map, String prefix) {
